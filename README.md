@@ -9,11 +9,11 @@ To setup the server just run ```server -p 3000``` in a terminal
 - ```-p, --port``` -> the port on which the server will run (required)
 
 ## Client
-To run a client, run ```client -i 127.0.0.1 -p 3000 -n nick -c test -h #FFAAFF``` in a terminal
+To run a client, run ```client -i http://127.0.0.1 -p 3000 -n nick -c test -h #FFAAFF``` in a terminal
 
-### Arguments:
-- ```-i, --ip``` -> the ip-address or domain of the server (required)
-- ```-p, --port``` -> the port on which the chat server is running (required)
+### Arguments
+- ```-i, --ip``` -> the ip-address or domain of the server with HTTP/HTTPS (required)
+- ```-p, --port``` -> the port on which the chat server is running (optional)
 - ```-n, --nickname``` -> your desired nickname (required)
 - ```-c, --chat``` -> the name of the chat that you would like to join (optional, defaults to 'general')
 - ```-h, --hex``` -> the hex of the color of your name in chat (optional, defaults to #FF4500)
