@@ -4,10 +4,10 @@ const io = require('socket.io-client');
 const readline = require('readline');
 
 const options = yargs
-    .usage('Usage: -i <ip> -p <port> -n <nickname> -c <chat>')
+    .usage('Usage: -i <ip> -n <nickname> -p <port> -c <chat> -h <hex>')
     .options('i', { alias: 'ip', describe: 'The IP-address or Domain of the socket server (with http/https)', type: 'string', demandOption: 'true' })
-    .options('p', { alias: 'port', describe: 'The Port the socket server is running on', type: 'string', demandOption: 'true' })
     .options('n', { alias: 'nickname', describe: 'Your Nickname', type: 'string', demandOption: 'true' })
+    .options('p', { alias: 'port', describe: 'The Port the socket server is running on', type: 'string' })
     .options('c', { alias: 'chat', describe: 'The name of the Chat you are trying to join', type: 'string' })
     .options('h', { alias: 'hex', describe: 'The HEX of the color that your name should be (standard is orange)', type: 'string' })
     .argv;

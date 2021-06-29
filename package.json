@@ -1,6 +1,6 @@
 {
   "name": "simple-terminal-chat",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "repository": "MithraicMagic/simple-terminal-chat",
   "description": "A simple terminal chatting app",
   "main": "index.js",
