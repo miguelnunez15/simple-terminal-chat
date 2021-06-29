@@ -1,0 +1,19 @@
+{
+  "name": "simple-terminal-chat",
+  "version": "1.0.1",
+  "description": "A simple terminal chatting app",
+  "main": "index.js",
+  "keywords": ["sockets", "client", "server", "chat"],
+  "author": "Nick Walraven",
+  "license": "ISC",
+  "bin": {
+    "client": "./src/client.js",
+    "server": "./src/server.js"
+  },
+  "dependencies": {
+    "chalk": "^4.1.1",
+    "socket.io": "^4.1.2",
+    "socket.io-client": "^4.1.2",
+    "yargs": "^17.0.1"
+  }
+}
