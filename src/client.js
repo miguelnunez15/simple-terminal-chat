@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const yargs = require('yargs');
+/** @type {io.Socket} */
 const io = require('socket.io-client');
 const readline = require('readline');
 
@@ -20,6 +21,7 @@ console.log(!options.insecure && (options.ip.includes('localhost') || options.ip
 
 //VARIABLES
 const socket = io(`${options.insecure ? 'http://' : 'https://'}${options.ip}${options.port ? `:${options.port}` : ''}`, {
+    timeout: 10000,
     query: {
         nickname: options.nickname,
         chat: options.chat ? options.chat : 'general',
@@ -77,6 +79,12 @@ function chatCommand(words) {
 
 //LISTENERS
 console.log(`Connecting to group [${options.chat ? options.chat : 'general'}] as [${options.nickname}]`);
+
+socket.on('connect_error', error => {
+    console.log(`Connection error due to ${error.message}`);
+    process.exit();
+});
+
 socket.on('joined', msg => {
     if (msg.success) {
         console.log(`Connected to [${msg.data.name}, age: ${msg.data.age}s, admin: ${msg.data.isAdmin ? 'You' : msg.data.admin}] - ${msg.data.users.length} ${msg.data.users.length < 2 ? 'user' : 'users'} online`);

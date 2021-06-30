@@ -1,6 +1,6 @@
 {
   "name": "simple-terminal-chat",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "repository": "MithraicMagic/simple-terminal-chat",
   "description": "A simple terminal chatting app",
   "main": "index.js",
@@ -8,8 +8,8 @@
   "author": "Nick Walraven",
   "license": "ISC",
   "bin": {
-    "client": "./src/client.js",
-    "server": "./src/server.js"
+    "stc-client": "./src/client.js",
+    "stc-server": "./src/server.js"
   },
   "dependencies": {
     "chalk": "^4.1.1",

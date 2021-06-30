@@ -25,6 +25,8 @@ const serverMocket = {
 
 const chats = [new Chat('general', serverMocket)];
 
+const forbiddenNames = ['SERVER', 'ERROR']
+
 //FUNCTIONS
 /**
  * 
@@ -53,7 +55,7 @@ io.on('connection', client => {
     if (client.handshake.query.version !== pjson.version)
         return client.emit('joined', { success: false, error: `[${chalk.red('ERROR')}] - Server version is [${pjson.version}], you have version [${client.handshake.query.version}]` });
 
-    client.nickname = client.handshake.query.nickname;
+    client.nickname = forbiddenNames.includes(client.handshake.query.nickname) ? 'Dumdum' : client.handshake.query.nickname;
     client.color = client.handshake.query.color;
     console.log(`[${chalk.hex(client.color)(client.nickname)}] is connecting...`);
 
@@ -84,6 +86,7 @@ io.on('connection', client => {
                 chat.sendToOtherUsers(`[${chalk.hex(oldColor)(client.nickname)}] -> [${chalk.hex(client.color)(client.nickname)}]`, client);
                 break;
             case util.COMMANDS.NICKNAME:
+                if (forbiddenNames.includes(msg.nickname)) return client.emit('message', 'You cannot pick that username.');
                 if (msg.nickname === client.nickname) return client.emit('message', `[${chalk.hex(client.color)(client.nickname)}] is already your nickname!`);
 
                 const oldNickname = client.nickname;
@@ -95,7 +98,7 @@ io.on('connection', client => {
                 client.emit('message', Array.from(chats, c => c.name).join(', '));
                 break;
             case util.COMMANDS.LISTUSERS:
-                client.emit('message', Array.from(chat.sockets, s => `[${chalk.hex(s.color)(s.nickname)}]`).join(', '));
+                client.emit('message', Array.from(chat.sockets.filter(s => s.nickname !== 'SERVER'), s => `[${chalk.hex(s.color)(s.nickname)}]`).join(', '));
                 break;
             default:
                 client.emit('message', 'Command not found.');

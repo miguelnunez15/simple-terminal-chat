@@ -39,7 +39,7 @@ class Chat {
     getData(client) {
         return {
             name: this.name,
-            users: Array.from(this.sockets, s => s.nickname),
+            users: Array.from(this.sockets.filter(s => s.nickname !== 'SERVER'), s => s.nickname),
             age: ((new Date()) - this.createdAt) / 1000,
             isAdmin: this.admin.id === client.id,
             admin: this.admin.nickname
