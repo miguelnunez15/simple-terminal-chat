@@ -19,7 +19,13 @@ To run a client, run ```client -i 127.0.0.1 -n nick -p 3000 -c test -h #FFAAFF -
 - ```-h, --hex``` -> the hex of the color of your name in chat (optional, defaults to #FF4500)
 - ```-s, --insecure``` -> whether the connection is to be insecure or not, http vs https (optional, defaults to https)
 
+### Commands
+While you're in a chat, you can use the following commands:
+- ```/chat <chatname>``` -> leaves the current chat and joins a chat with that chat name
+- ```/color <color>``` -> changes your name's color to the chosen color
+- ```/nickname <nickname>``` -> changes your nickname to the chose nickname
+- ```/exit``` -> exits the application (cleaner than CTRL+C)
+
 ## TODO
-- Commands (e.g. to change color and/or nickname while in chat)
 - Passwords for chats
 - End-to-end encryption

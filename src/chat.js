@@ -7,21 +7,25 @@ class Chat {
 
     addSocket(socket) {
         this.sockets.push(socket);
-        this.sendToGroup(`${socket.nickname} joined!`, socket);
+        this.sendToOtherUsers(`${socket.nickname} joined!`, socket);
     }
 
     removeSocket(socket) {
         this.sockets.splice(this.sockets.findIndex(s => s.id === socket.id), 1);
-        this.sendToGroup(`${socket.nickname} left..`, null, true);
+        this.sendToAllUsers(`${socket.nickname} left..`);
 
         if (this.sockets.length === 0) return true;
         return false;
     }
 
-    sendToGroup(text, sender, override = false) {
+    sendToOtherUsers(text, sender) {
         this.sockets.forEach(s => {
-            if (override || s.id !== sender.id) s.emit('message', text);
+            if (s.id !== sender.id) s.emit('message', text);
         });
+    }
+
+    sendToAllUsers(text) {
+        this.sockets.forEach(s => s.emit('message', text));
     }
 
     getData() {
