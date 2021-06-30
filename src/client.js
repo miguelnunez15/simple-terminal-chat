@@ -4,6 +4,7 @@ const io = require('socket.io-client');
 const readline = require('readline');
 
 const util = require('./util');
+const pjson = require('../package.json');
 
 const options = yargs
     .usage('Usage: -i <ip> -n <nickname> -p <port> -c <chat> -h <hex> -s <secure>')
@@ -22,7 +23,8 @@ const socket = io(`${options.insecure ? 'http://' : 'https://'}${options.ip}${op
     query: {
         nickname: options.nickname,
         chat: options.chat ? options.chat : 'general',
-        color: options.hex ? options.hex : '#FF4500'
+        color: options.hex ? options.hex : '#FF4500',
+        version: pjson.version
     }
 });
 
@@ -59,6 +61,12 @@ function chatCommand(words) {
             obj.command = util.COMMANDS.NICKNAME;
             obj.nickname = words[1];
             break;
+        case 'list-chats':
+            obj.command = util.COMMANDS.LISTCHATS;
+            break;
+        case 'list-users':
+            obj.command = util.COMMANDS.LISTUSERS;
+            break;
         case 'exit':
             process.exit();
         default:
@@ -71,10 +79,10 @@ function chatCommand(words) {
 console.log(`Connecting to group [${options.chat ? options.chat : 'general'}] as [${options.nickname}]`);
 socket.on('joined', msg => {
     if (msg.success) {
-        console.log(`Connected to [${msg.data.name}, age: ${msg.data.age}s] - ${msg.data.users.length} users online`);
+        console.log(`Connected to [${msg.data.name}, age: ${msg.data.age}s, admin: ${msg.data.isAdmin ? 'You' : msg.data.admin}] - ${msg.data.users.length} ${msg.data.users.length < 2 ? 'user' : 'users'} online`);
         rl.prompt(true);
     } else {
-        console.log('Could not connect, exiting..');
+        console.log(msg.error);
         process.exit();
     }
 });

@@ -2,6 +2,7 @@ class Chat {
     constructor(name, socket) {
         this.name = name;
         this.sockets = [socket];
+        this.admin = socket;
         this.createdAt = new Date();
     }
 
@@ -14,8 +15,15 @@ class Chat {
         this.sockets.splice(this.sockets.findIndex(s => s.id === socket.id), 1);
         this.sendToAllUsers(`${socket.nickname} left..`);
 
-        if (this.sockets.length === 0) return true;
-        return false;
+        if (this.sockets.length === 0) {
+            return true;
+        } else {
+            if (this.admin.id === socket.id) {
+                this.admin = this.sockets[0];
+                this.sockets[0].emit('message', 'You are now the admin of this chat!');
+            }
+            return false;
+        }
     }
 
     sendToOtherUsers(text, sender) {
@@ -28,11 +36,13 @@ class Chat {
         this.sockets.forEach(s => s.emit('message', text));
     }
 
-    getData() {
+    getData(client) {
         return {
             name: this.name,
             users: Array.from(this.sockets, s => s.nickname),
-            age: (new Date()).getSeconds() - this.createdAt.getSeconds()
+            age: ((new Date()) - this.createdAt) / 1000,
+            isAdmin: this.admin.id === client.id,
+            admin: this.admin.nickname
         }
     }
 }

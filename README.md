@@ -23,7 +23,9 @@ To run a client, run ```client -i 127.0.0.1 -n nick -p 3000 -c test -h #FFAAFF -
 While you're in a chat, you can use the following commands:
 - ```/chat <chatname>``` -> leaves the current chat and joins a chat with that chat name
 - ```/color <color>``` -> changes your name's color to the chosen color
-- ```/nickname <nickname>``` -> changes your nickname to the chose nickname
+- ```/nickname <nickname>``` -> changes your nickname to the chosen nickname
+- ```/list-chats``` -> lists the available chats on the server
+- ```/list-users``` -> lists the users in a chat
 - ```/exit``` -> exits the application (cleaner than CTRL+C)
 
 ## TODO

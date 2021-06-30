@@ -5,17 +5,25 @@ const yargs = require('yargs');
 const server = require('http').createServer();
 /** @type {Server} */
 const io = require('socket.io')(server);
+const pjson = require('../package.json');
 
 const Chat = require('./chat');
 const util = require('./util');
 
 // VARIABLES
 const options = yargs
-.usage('Usage: -p <port>')
-.options('p', { alias: 'port', describe: 'The port the server will be running locally on', type: 'string', demandOption: 'true' })
+    .usage('Usage: -p <port>')
+    .options('p', { alias: 'port', describe: 'The port the server will be running locally on', type: 'string', demandOption: 'true' })
     .argv;
 
-const chats = [];
+const serverMocket = {
+    id: 0,
+    nickname: 'SERVER',
+    color: '#FFFFFF',
+    emit: (type, content) => {}
+}
+
+const chats = [new Chat('general', serverMocket)];
 
 //FUNCTIONS
 /**
@@ -37,11 +45,14 @@ function getOrCreateChat(name, client) {
 
 function removeClientFromChat(chat, client) {
     const empty = chat.removeSocket(client);
-    if (empty) chats.splice(chats.find(c => c.name === chat.name), 1);
+    if (empty) chats.splice(chats.findIndex(c => c.name === chat.name), 1);
 }
 
 //LISTENERS
 io.on('connection', client => {
+    if (client.handshake.query.version !== pjson.version)
+        return client.emit('joined', { success: false, error: `[${chalk.red('ERROR')}] - Server version is [${pjson.version}], you have version [${client.handshake.query.version}]` });
+
     client.nickname = client.handshake.query.nickname;
     client.color = client.handshake.query.color;
     console.log(`[${chalk.hex(client.color)(client.nickname)}] is connecting...`);
@@ -58,9 +69,11 @@ io.on('connection', client => {
                 if (msg.chat === chat.name) return client.emit('message', 'You are already in that chat.');
 
                 const oldName = chat.name;
+
                 removeClientFromChat(chat, client);
                 chat = getOrCreateChat(msg.chat, client);
-                client.emit('message', `Left [${oldName}] and joined [${msg.chat}]!`);
+                const data = chat.getData(client);
+                client.emit('message', `Left [${oldName}] and joined [${msg.chat}, age: ${data.age}s, admin: ${data.isAdmin ? 'You' : data.admin}]!`);
                 break;
             case util.COMMANDS.COLOR:
                 if (msg.color === client.color) return client.emit('message', `[${chalk.hex(client.color)(client.color)}] is already your color!`);
@@ -78,6 +91,12 @@ io.on('connection', client => {
                 client.emit('message', `Your nickname is now [${chalk.hex(client.color)(client.nickname)}]`);
                 chat.sendToOtherUsers(`[${chalk.hex(client.color)(oldNickname)}] -> [${chalk.hex(client.color)(client.nickname)}]`, client);
                 break;
+            case util.COMMANDS.LISTCHATS:
+                client.emit('message', Array.from(chats, c => c.name).join(', '));
+                break;
+            case util.COMMANDS.LISTUSERS:
+                client.emit('message', Array.from(chat.sockets, s => `[${chalk.hex(s.color)(s.nickname)}]`).join(', '));
+                break;
             default:
                 client.emit('message', 'Command not found.');
         }
@@ -88,7 +107,7 @@ io.on('connection', client => {
         removeClientFromChat(chat, client);
     });
 
-    client.emit('joined', { success: true, data: chat.getData() });
+    client.emit('joined', { success: true, data: chat.getData(client) });
 });
 
 server.listen(options.port);
