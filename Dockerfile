@@ -8,5 +8,5 @@ RUN npm install
 
 COPY . ./
 
-EXPOSE 4500
-CMD [ "node", "src/server.js", "-p", "4500" ]
+EXPOSE 3000
+CMD [ "node", "src/server.js", "-p", "3000" ]

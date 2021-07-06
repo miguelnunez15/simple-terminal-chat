@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Creating NPM Release & Hosting on server
-        uses: appleboy/ssh-action@master # An action made to control Linux servers
-        with: # We set all our secrets here for the action, these won't be shown in the action logs
+        uses: appleboy/ssh-action@master
+        with:
           host: ${{ secrets.HOST }}
           port: ${{ secrets.PORT }}
           username: ${{ secrets.USERNAME }}
@@ -23,5 +23,6 @@ jobs:
             npm prune
             npm install
             docker build -t stc .
-            docker run --restart unless-stopped -d -p 4500:4500 --name stc stc:latest
+            docker rm -f movienight || true
+            docker run --restart unless-stopped -d -p 4500:3000 --name stc stc:latest
             npm publish
