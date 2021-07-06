@@ -17,6 +17,7 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.KEY }}
           script: |
+            whoami
             cd ~/github-projects/simple-terminal-chat/
             git pull
             npm prune
