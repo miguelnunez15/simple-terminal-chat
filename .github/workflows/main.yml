@@ -19,6 +19,7 @@ jobs:
           script: |
             whoami
             cd ~/github-projects/simple-terminal-chat/
+            git checkout release
             git pull
             npm prune
             npm install
