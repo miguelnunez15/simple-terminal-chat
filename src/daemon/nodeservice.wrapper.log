@@ -1,0 +1,2 @@
+2024-11-05 13:52:43 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\Users\mnunez\Documents\GitHub\simple-terminal-chat\node_modules\node-windows\lib\wrapper.js --file C:\Users\mnunez\Documents\GitHub\simple-terminal-chat\src\server.js --scriptoptions= --log "nodeService wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2024-11-05 13:52:43 - Started 11456

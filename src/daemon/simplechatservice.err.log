@@ -1,0 +1,30 @@
+Usage: -p <port>
+
+Options:
+      --help     Show help                                             [boolean]
+      --version  Show version number                                   [boolean]
+  -p, --port     The port the server will be running locally on
+                                                             [string] [required]
+
+Missing required argument: p
+true
+Usage: -p <port>
+
+Options:
+      --help     Show help                                             [boolean]
+      --version  Show version number                                   [boolean]
+  -p, --port     The port the server will be running locally on
+                                                             [string] [required]
+
+Missing required argument: p
+true
+Usage: -p <port>
+
+Options:
+      --help     Show help                                             [boolean]
+      --version  Show version number                                   [boolean]
+  -p, --port     The port the server will be running locally on
+                                                             [string] [required]
+
+Missing required argument: p
+true

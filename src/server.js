@@ -13,7 +13,7 @@ const util = require('./util');
 // VARIABLES
 const options = yargs
     .usage('Usage: -p <port>')
-    .options('p', { alias: 'port', describe: 'The port the server will be running locally on', type: 'string', demandOption: 'true' })
+    .options('p', { alias: 'port', describe: 'The port the server will be running locally on', type: 'string', demandOption: false, default: '3018' })
     .argv;
 
 const serverMocket = {
@@ -26,6 +26,7 @@ const serverMocket = {
 const chats = [new Chat('general', serverMocket)];
 
 const forbiddenNames = ['SERVER', 'ERROR']
+
 
 //FUNCTIONS
 /**
@@ -62,7 +63,9 @@ io.on('connection', client => {
     let chat = getOrCreateChat(client.handshake.query.chat, client);
 
     client.on('message', msg => {
-        chat.sendToAllUsers(`[${chalk.hex(client.color)(client.nickname)}] - ${msg.text}`, client);
+        if (!msg.text) return client.emit('message', chalk.hex('#FF69B4')('\u26A0  Message cannot be empty.'));
+        const time = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        chat.sendToAllUsers(`[${chalk.pink(client.color)(client.nickname)}] - ${msg.text}`, client);
     });
 
     client.on('command', msg => {
@@ -114,4 +117,4 @@ io.on('connection', client => {
 });
 
 server.listen(options.port);
-console.log(`Listening on ${options.port}`);
+console.log(`Escuchando en el puerto: ${options.port}`);

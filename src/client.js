@@ -7,15 +7,74 @@ const readline = require('readline');
 const util = require('./util');
 const pjson = require('../package.json');
 
-const options = yargs
-    .usage('Usage: -i <ip> -n <nickname> -p <port> -c <chat> -h <hex> -s <secure>')
-    .options('i', { alias: 'ip', describe: 'The IP-address or Domain of the socket server', type: 'string', demandOption: 'true' })
-    .options('n', { alias: 'nickname', describe: 'Your Nickname', type: 'string', demandOption: 'true' })
-    .options('p', { alias: 'port', describe: 'The Port the socket server is running on', type: 'string' })
-    .options('c', { alias: 'chat', describe: 'The name of the Chat you are trying to join (defaults to "general")', type: 'string' })
-    .options('h', { alias: 'hex', describe: 'The HEX of the color that your name should be (defaults to #FF4500)', type: 'string' })
-    .options('s', { alias: 'insecure', describe: 'Whether the connection is to be insecure or not, http vs. https (defaults to false, https)', type: 'boolean' })
-    .argv;
+const chalk = require('chalk'); 
+
+const inquirer = require('inquirer').default;
+
+const readlineSync = require('readline-sync');
+
+const blueDiamond = '\u{1F539}';
+const smilingFace = '\u{1F642}';
+const confettiBall = '\u{1F38A}';
+
+const options = {};
+options.ip = "127.0.0.1";
+options.nickname = "User";
+options.port = "3018";
+options.chat = "general";
+options.insecure = true;
+options.hex = "#FFC0CB";
+
+const pink = chalk.hex('#ff00f0'); 
+
+function selectColor() {
+    return inquirer
+      .prompt([
+        {
+          type: 'list',
+          name: 'color',
+          message: 'Por favor, elige un color para tu nombre:',
+          choices: [
+            { name: colors.pink, value: '#FFC0CB' },
+            { name: colors.blue, value: '#6495ED' },
+            { name: colors.green, value: '#32CD32' }
+          ]
+        }
+      ])
+      .then((answers) => {
+        const selectedColor = chalk.hex(answers.color);
+      })
+      .catch((error) => {
+        console.error('Ha ocurrido un error:', error);
+      });
+  }
+
+
+async function getOptions() {
+    await selectColor();
+}
+
+const colors = {
+    pink: chalk.hex('#FFC0CB')('Rosa'),
+    blue: chalk.hex('#6495ED')('Azul'),
+    green: chalk.hex('#32CD32')('Verde')
+  };
+
+// Input de nickname
+const questionText = chalk.blueBright(`Please enter your nickname: `);
+options.nickname = readlineSync.question(questionText);
+console.log(chalk.greenBright(`${smilingFace} Hello, ${options.nickname}! Welcome to our program! ${confettiBall}`));
+
+// getOptions();
+
+console.log(chalk.bold.blueBright("While you're in a chat, you can use the following commands:\n"));
+
+console.log(`${chalk.cyan('/chat <chatname>')} ${chalk.green('->')} ${chalk.gray('leaves the current chat and joins a chat with that chat name')}`);
+console.log(`${chalk.cyan('/color <color>')} ${chalk.green('->')} ${chalk.gray("changes your name's color to the chosen color")}`);
+console.log(`${chalk.cyan('/nickname <nickname>')} ${chalk.green('->')} ${chalk.gray("changes your nickname to the chosen nickname")}`);
+console.log(`${chalk.cyan('/list-chats')} ${chalk.green('->')} ${chalk.gray('lists the available chats on the server')}`);
+console.log(`${chalk.cyan('/list-users')} ${chalk.green('->')} ${chalk.gray('lists the users in a chat')}`);
+console.log(`${chalk.cyan('/exit')} ${chalk.green('->')} ${chalk.gray('exits the application (cleaner than CTRL+C)')}`);
 
 console.log(!options.insecure && (options.ip.includes('localhost') || options.ip.includes('127.0.0.1')) ? 'You\'re securely trying to connect to a server on this machine, try running client with the -s flag (for http instead of https)' : '');
 
@@ -25,7 +84,7 @@ const socket = io(`${options.insecure ? 'http://' : 'https://'}${options.ip}${op
     query: {
         nickname: options.nickname,
         chat: options.chat ? options.chat : 'general',
-        color: options.hex ? options.hex : '#FF4500',
+        color: options.hex ? options.hex : '#FFC0CB',
         version: pjson.version
     }
 });
@@ -95,7 +154,9 @@ socket.on('joined', msg => {
     }
 });
 
-socket.on('message', msg => log(msg));
+socket.on('message', (message) => {
+    console.log(`${chalk.gray(`[${new Date().toLocaleTimeString()}]`)} ${pink(message)}`);
+});
 
 socket.on('disconnect', msg => {
     console.log('Connection to server lost, exiting..');
