@@ -18,7 +18,7 @@ const smilingFace = '\u{1F642}';
 const confettiBall = '\u{1F38A}';
 
 const options = {};
-options.ip = "127.0.0.1";
+options.ip = "10.0.0.79";
 options.nickname = "User";
 options.port = "3018";
 options.chat = "general";
@@ -87,7 +87,7 @@ const socket = io(`${options.insecure ? 'http://' : 'https://'}${options.ip}${op
         color: options.hex ? options.hex : '#FFC0CB',
         version: pjson.version
     }
-});
+})
 
 const rl = readline.createInterface({
     input: process.stdin,
