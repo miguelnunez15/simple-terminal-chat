@@ -17,6 +17,8 @@ const blueDiamond = '\u{1F539}';
 const smilingFace = '\u{1F642}';
 const confettiBall = '\u{1F38A}';
 
+const notifier = require('node-notifier');
+
 const options = {};
 options.ip = "10.0.0.79";
 options.nickname = "User";
@@ -156,6 +158,12 @@ socket.on('joined', msg => {
 
 socket.on('message', (message) => {
     console.log(`${chalk.gray(`[${new Date().toLocaleTimeString()}]`)} ${pink(message)}`);
+    notifier.notify({
+        title: 'Notificación',
+        message: 'Acuerdáte de enviar el email.',
+        sound: true,
+        wait: true
+    });
 });
 
 socket.on('disconnect', msg => {
